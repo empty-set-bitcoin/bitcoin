@@ -1,4 +1,3 @@
-
 pragma solidity ^0.5.17;
 pragma experimental ABIEncoderV2;
 
@@ -12,11 +11,35 @@ contract Market is Comptroller, Curve {
 
     bytes32 private constant FILE = "Market";
 
-    event CouponExpiration(uint256 indexed epoch, uint256 couponsExpired, uint256 lessRedeemable, uint256 lessDebt, uint256 newBonded);
-    event CouponPurchase(address indexed account, uint256 indexed epoch, uint256 goldAmount, uint256 couponAmount);
-    event CouponRedemption(address indexed account, uint256 indexed epoch, uint256 couponAmount);
-    event CouponTransfer(address indexed from, address indexed to, uint256 indexed epoch, uint256 value);
-    event CouponApproval(address indexed owner, address indexed spender, uint256 value);
+    event CouponExpiration(
+        uint256 indexed epoch,
+        uint256 couponsExpired,
+        uint256 lessRedeemable,
+        uint256 lessDebt,
+        uint256 newBonded
+    );
+    event CouponPurchase(
+        address indexed account,
+        uint256 indexed epoch,
+        uint256 bitcoinAmount,
+        uint256 couponAmount
+    );
+    event CouponRedemption(
+        address indexed account,
+        uint256 indexed epoch,
+        uint256 couponAmount
+    );
+    event CouponTransfer(
+        address indexed from,
+        address indexed to,
+        uint256 indexed epoch,
+        uint256 value
+    );
+    event CouponApproval(
+        address indexed owner,
+        address indexed spender,
+        uint256 value
+    );
 
     function step() internal {
         // Expire prior coupons
@@ -43,61 +66,96 @@ contract Market is Comptroller, Curve {
             (, newBonded) = increaseSupply(lessRedeemable);
         }
 
-        emit CouponExpiration(epoch, couponsForEpoch, lessRedeemable, 0, newBonded);
+        emit CouponExpiration(
+            epoch,
+            couponsForEpoch,
+            lessRedeemable,
+            0,
+            newBonded
+        );
     }
 
     function couponPremium(uint256 amount) public view returns (uint256) {
-        return calculateCouponPremium(gold().totalSupply(), totalDebt(), amount);
+        return
+            calculateCouponPremium(
+                bitcoin().totalSupply(),
+                totalDebt(),
+                amount
+            );
     }
 
-    function purchaseCoupons(uint256 goldAmount) external returns (uint256) {
-        Require.that(
-            goldAmount > 0,
-            FILE,
-            "Must purchase non-zero amount"
-        );
+    function purchaseCoupons(uint256 bitcoinAmount) external returns (uint256) {
+        Require.that(bitcoinAmount > 0, FILE, "Must purchase non-zero amount");
 
-        Require.that(
-            totalDebt() >= goldAmount,
-            FILE,
-            "Not enough debt"
-        );
+        Require.that(totalDebt() >= bitcoinAmount, FILE, "Not enough debt");
 
         uint256 epoch = epoch();
-        uint256 couponAmount = goldAmount.add(couponPremium(goldAmount));
-        burnFromAccount(msg.sender, goldAmount);
+        uint256 couponAmount = bitcoinAmount.add(couponPremium(bitcoinAmount));
+        burnFromAccount(msg.sender, bitcoinAmount);
         incrementBalanceOfCoupons(msg.sender, epoch, couponAmount);
 
-        emit CouponPurchase(msg.sender, epoch, goldAmount, couponAmount);
+        emit CouponPurchase(msg.sender, epoch, bitcoinAmount, couponAmount);
 
         return couponAmount;
     }
 
     function redeemCoupons(uint256 couponEpoch, uint256 couponAmount) external {
         require(epoch().sub(couponEpoch) >= 2, "Market: Too early to redeem");
-        decrementBalanceOfCoupons(msg.sender, couponEpoch, couponAmount, "Market: Insufficient coupon balance");
+        decrementBalanceOfCoupons(
+            msg.sender,
+            couponEpoch,
+            couponAmount,
+            "Market: Insufficient coupon balance"
+        );
         redeemToAccount(msg.sender, couponAmount);
 
         emit CouponRedemption(msg.sender, couponEpoch, couponAmount);
     }
 
     function approveCoupons(address spender, uint256 amount) external {
-        require(spender != address(0), "Market: Coupon approve to the zero address");
+        require(
+            spender != address(0),
+            "Market: Coupon approve to the zero address"
+        );
 
         updateAllowanceCoupons(msg.sender, spender, amount);
 
         emit CouponApproval(msg.sender, spender, amount);
     }
 
-    function transferCoupons(address sender, address recipient, uint256 epoch, uint256 amount) external {
-        require(sender != address(0), "Market: Coupon transfer from the zero address");
-        require(recipient != address(0), "Market: Coupon transfer to the zero address");
+    function transferCoupons(
+        address sender,
+        address recipient,
+        uint256 epoch,
+        uint256 amount
+    ) external {
+        require(
+            sender != address(0),
+            "Market: Coupon transfer from the zero address"
+        );
+        require(
+            recipient != address(0),
+            "Market: Coupon transfer to the zero address"
+        );
 
-        decrementBalanceOfCoupons(sender, epoch, amount, "Market: Insufficient coupon balance");
+        decrementBalanceOfCoupons(
+            sender,
+            epoch,
+            amount,
+            "Market: Insufficient coupon balance"
+        );
         incrementBalanceOfCoupons(recipient, epoch, amount);
 
-        if (msg.sender != sender && allowanceCoupons(sender, msg.sender) != uint256(-1)) {
-            decrementAllowanceCoupons(sender, msg.sender, amount, "Market: Insufficient coupon approval");
+        if (
+            msg.sender != sender &&
+            allowanceCoupons(sender, msg.sender) != uint256(-1)
+        ) {
+            decrementAllowanceCoupons(
+                sender,
+                msg.sender,
+                amount,
+                "Market: Insufficient coupon approval"
+            );
         }
 
         emit CouponTransfer(sender, recipient, epoch, amount);

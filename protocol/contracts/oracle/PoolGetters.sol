@@ -1,4 +1,3 @@
-
 pragma solidity ^0.5.17;
 pragma experimental ABIEncoderV2;
 
@@ -13,16 +12,16 @@ contract PoolGetters is PoolState {
      * Global
      */
 
-    function sXAU() public view returns (address) {
-        return Constants.getSXAUAddress();
+    function sBTC() public view returns (address) {
+        return Constants.getSBTCAddress();
     }
 
     function dao() public view returns (IDAO) {
         return _state.provider.dao;
     }
 
-    function gold() public view returns (IGold) {
-        return _state.provider.gold;
+    function bitcoin() public view returns (IBitcoin) {
+        return _state.provider.bitcoin;
     }
 
     function univ2() public view returns (IERC20) {
@@ -45,8 +44,8 @@ contract PoolGetters is PoolState {
         return _state.balance.phantom;
     }
 
-    function totalRewarded(IGold gold) public view returns (uint256) {
-        return gold.balanceOf(address(this)).sub(totalClaimable());
+    function totalRewarded(IBitcoin bitcoin) public view returns (uint256) {
+        return bitcoin.balanceOf(address(this)).sub(totalClaimable());
     }
 
     function paused() public view returns (bool) {
@@ -73,16 +72,22 @@ contract PoolGetters is PoolState {
         return _state.accounts[account].phantom;
     }
 
-    function balanceOfRewarded(address account, IGold gold) public view returns (uint256) {
+    function balanceOfRewarded(address account, IBitcoin bitcoin)
+        public
+        view
+        returns (uint256)
+    {
         uint256 totalBonded = totalBonded();
         if (totalBonded == 0) {
             return 0;
         }
 
-        uint256 totalRewardedWithPhantom = totalRewarded(gold).add(totalPhantom());
-        uint256 balanceOfRewardedWithPhantom = totalRewardedWithPhantom
-        .mul(balanceOfBonded(account))
-        .div(totalBonded);
+        uint256 totalRewardedWithPhantom =
+            totalRewarded(bitcoin).add(totalPhantom());
+        uint256 balanceOfRewardedWithPhantom =
+            totalRewardedWithPhantom.mul(balanceOfBonded(account)).div(
+                totalBonded
+            );
 
         uint256 balanceOfPhantom = balanceOfPhantom(account);
         if (balanceOfRewardedWithPhantom > balanceOfPhantom) {
@@ -91,9 +96,14 @@ contract PoolGetters is PoolState {
         return 0;
     }
 
-    function statusOf(address account, uint256 epoch) public view returns (PoolAccount.Status) {
-        return epoch >= _state.accounts[account].fluidUntil ?
-        PoolAccount.Status.Frozen :
-        PoolAccount.Status.Fluid;
+    function statusOf(address account, uint256 epoch)
+        public
+        view
+        returns (PoolAccount.Status)
+    {
+        return
+            epoch >= _state.accounts[account].fluidUntil
+                ? PoolAccount.Status.Frozen
+                : PoolAccount.Status.Fluid;
     }
 }

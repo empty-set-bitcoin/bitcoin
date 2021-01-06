@@ -3,7 +3,7 @@ const { accounts, contract } = require('@openzeppelin/test-environment');
 const { BN, expectRevert, time, constants } = require('@openzeppelin/test-helpers');
 const { expect } = require('chai');
 
-const Gold = contract.fromArtifact('Gold');
+const Bitcoin = contract.fromArtifact('Bitcoin');
 const MockOracle = contract.fromArtifact('MockOracle');
 const MockUniswapV2PairTrade = contract.fromArtifact('MockUniswapV2PairTrade');
 
@@ -14,7 +14,7 @@ function cents(n) {
   return new BN(n).mul(new BN(10).pow(new BN(16)));
 }
 
-function sXAU(n) {
+function sBTC(n) {
   return new BN(n).mul(new BN(10).pow(new BN(18)));
 }
 
@@ -26,19 +26,19 @@ async function priceForToBN(oracle) {
   return (await oracle.latestPrice()).value;
 }
 
-async function simulateTrade(amm, esg, sXAU) {
+async function simulateTrade(amm, esb, sBTC) {
   return await amm.simulateTrade(
-    new BN(esg).mul(new BN(10).pow(new BN(18))),
-    new BN(sXAU).mul(new BN(10).pow(new BN(18))));
+    new BN(esb).mul(new BN(10).pow(new BN(18))),
+    new BN(sBTC).mul(new BN(10).pow(new BN(18))));
 }
 
 describe('Oracle', function () {
   const [ ownerAddress, userAddress ] = accounts;
 
   beforeEach(async function () {
-    this.gold = await Gold.new({from: ownerAddress});
+    this.bitcoin = await Bitcoin.new({from: ownerAddress});
     this.amm = await MockUniswapV2PairTrade.new({from: ownerAddress});
-    this.oracle = await MockOracle.new(this.amm.address, this.gold.address, {from: ownerAddress, gas: 8000000});
+    this.oracle = await MockOracle.new(this.amm.address, this.bitcoin.address, {from: ownerAddress, gas: 8000000});
     await time.increase(3600);
   });
 
@@ -86,7 +86,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(new BN(0));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1000000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1000000));
           });
         });
 
@@ -103,7 +103,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(new BN(0));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1000000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1000000));
           });
         });
       });
@@ -121,7 +121,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(new BN(0));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1000000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1000000));
           });
         });
 
@@ -138,7 +138,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(new BN(0));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1000000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1000000));
           });
         });
       });
@@ -162,7 +162,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(uint112s(this.timediff));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1000000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1000000));
           });
         });
 
@@ -184,7 +184,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(uint112s(this.timediff));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1000000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1000000));
           });
         });
       });
@@ -206,7 +206,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(uint112s(this.timediff, 1100000, 1000000));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1100000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1100000));
           });
         });
 
@@ -227,7 +227,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(uint112s(this.timediff, 1100000, 1000000));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1100000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1100000));
           });
         });
       });
@@ -251,7 +251,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(uint112s(this.timediff));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1000000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1000000));
           });
         });
 
@@ -272,7 +272,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(uint112s(this.timediff));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1000000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1000000));
           });
         });
       });
@@ -294,7 +294,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(uint112s(this.timediff, 1100000, 1000000));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1100000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1100000));
           });
         });
 
@@ -315,7 +315,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(uint112s(this.timediff, 1100000, 1000000));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1100000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1100000));
           });
         });
 
@@ -336,7 +336,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(uint112s(this.timediff, 1150000, 1000000));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1050000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1050000));
           });
         });
       });
@@ -362,7 +362,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(uint112s(this.timediff));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1000000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1000000));
           });
         });
 
@@ -385,7 +385,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(uint112s(this.timediff));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1000000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1000000));
           });
         });
       });
@@ -409,7 +409,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(uint112s(this.timediff, 1100000, 1000000));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1100000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1100000));
           });
         });
 
@@ -432,7 +432,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(uint112s(this.timediff, 1100000, 1000000));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1100000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1100000));
           });
         });
 
@@ -458,7 +458,7 @@ describe('Oracle', function () {
             expect(await this.oracle.isInitialized()).to.be.equal(true);
             expect(await this.oracle.cumulative()).to.be.bignumber.equal(begin.add(end));
             expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-            expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(1050000));
+            expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(1050000));
           });
         });
       });
@@ -489,7 +489,7 @@ describe('Oracle', function () {
           expect(await priceForToBN(this.oracle)).to.be.bignumber.closeTo(cents(95), EPSILON);
           expect(await this.oracle.isInitialized()).to.be.equal(true);
           expect(await this.oracle.timestamp()).to.be.bignumber.equal(this.timestamp);
-          expect(await this.oracle.reserve()).to.be.bignumber.equal(sXAU(950000));
+          expect(await this.oracle.reserve()).to.be.bignumber.equal(sBTC(950000));
         });
       });
     });

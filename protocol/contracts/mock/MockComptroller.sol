@@ -1,14 +1,13 @@
-
 pragma solidity ^0.5.17;
 pragma experimental ABIEncoderV2;
 
 import "../dao/Comptroller.sol";
-import "../token/Gold.sol";
+import "../token/Bitcoin.sol";
 import "./MockState.sol";
 
 contract MockComptroller is Comptroller, MockState {
     constructor(address pool) public {
-        _state.provider.gold = new Gold();
+        _state.provider.bitcoin = new Bitcoin();
         _state.provider.pool = pool;
     }
 
@@ -42,6 +41,6 @@ contract MockComptroller is Comptroller, MockState {
 
     /* For testing only */
     function mintToE(address account, uint256 amount) external {
-        gold().mint(account, amount);
+        bitcoin().mint(account, amount);
     }
 }

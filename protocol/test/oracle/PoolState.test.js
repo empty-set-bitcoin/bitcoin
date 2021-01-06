@@ -12,9 +12,9 @@ describe('PollState', function () {
 
   beforeEach(async function () {
     this.dao = await MockSettableDAO.new({from: ownerAddress});
-    this.gold = await MockToken.new("Empty Set Gold", "ESG", 18, {from: ownerAddress});
+    this.bitcoin = await MockToken.new("Empty Set Bitcoin", "ESB", 18, {from: ownerAddress});
     this.setters = await MockPoolState.new({from: ownerAddress});
-    await this.setters.set(this.dao.address, this.gold.address);
+    await this.setters.set(this.dao.address, this.bitcoin.address);
   });
 
   /**
@@ -251,12 +251,12 @@ describe('PollState', function () {
   describe('rewarded', function () {
     describe('no user', function () {
       beforeEach('call', async function () {
-        await this.gold.mint(this.setters.address, 500);
+        await this.bitcoin.mint(this.setters.address, 500);
       });
 
       it('reward display correctly', async function () {
-        expect(await this.setters.balanceOfRewarded(userAddress, this.gold.address)).to.be.bignumber.equal(new BN(0));
-        expect(await this.setters.totalRewarded(this.gold.address)).to.be.bignumber.equal(new BN(500));
+        expect(await this.setters.balanceOfRewarded(userAddress, this.bitcoin.address)).to.be.bignumber.equal(new BN(0));
+        expect(await this.setters.totalRewarded(this.bitcoin.address)).to.be.bignumber.equal(new BN(500));
       });
     });
 
@@ -267,12 +267,12 @@ describe('PollState', function () {
 
       describe('when called', function () {
         beforeEach('call', async function () {
-          await this.gold.mint(this.setters.address, 500);
+          await this.bitcoin.mint(this.setters.address, 500);
         });
 
         it('reward display correctly', async function () {
-          expect(await this.setters.balanceOfRewarded(userAddress, this.gold.address)).to.be.bignumber.equal(new BN(500));
-          expect(await this.setters.totalRewarded(this.gold.address)).to.be.bignumber.equal(new BN(500));
+          expect(await this.setters.balanceOfRewarded(userAddress, this.bitcoin.address)).to.be.bignumber.equal(new BN(500));
+          expect(await this.setters.totalRewarded(this.bitcoin.address)).to.be.bignumber.equal(new BN(500));
         });
       });
     });
@@ -285,13 +285,13 @@ describe('PollState', function () {
 
       describe('when called', function () {
         beforeEach('call', async function () {
-          await this.gold.mint(this.setters.address, 500);
+          await this.bitcoin.mint(this.setters.address, 500);
         });
 
         it('reward display correctly', async function () {
-          expect(await this.setters.balanceOfRewarded(userAddress, this.gold.address)).to.be.bignumber.equal(new BN(125));
-          expect(await this.setters.balanceOfRewarded(userAddress2, this.gold.address)).to.be.bignumber.equal(new BN(375));
-          expect(await this.setters.totalRewarded(this.gold.address)).to.be.bignumber.equal(new BN(500));
+          expect(await this.setters.balanceOfRewarded(userAddress, this.bitcoin.address)).to.be.bignumber.equal(new BN(125));
+          expect(await this.setters.balanceOfRewarded(userAddress2, this.bitcoin.address)).to.be.bignumber.equal(new BN(375));
+          expect(await this.setters.totalRewarded(this.bitcoin.address)).to.be.bignumber.equal(new BN(500));
         });
       });
     });

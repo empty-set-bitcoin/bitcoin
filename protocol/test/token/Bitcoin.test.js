@@ -5,7 +5,7 @@ const { expect } = require('chai');
 const { signTypedData } = require('eth-sig-util');
 
 const MockComptroller = contract.fromArtifact('MockComptroller');
-const Gold = contract.fromArtifact('Gold');
+const Bitcoin = contract.fromArtifact('Bitcoin');
 
 const domain = [
   { name: "name", type: "string" },
@@ -22,12 +22,12 @@ const permit = [
   { name: "deadline", type: "uint256" },
 ];
 
-async function signPermit(gold, privateKey, message) {
+async function signPermit(bitcoin, privateKey, message) {
   const domainData = {
-    name: "Empty Set Gold",
+    name: "Empty Set Bitcoin",
     version: "1",
     chainId: "1",
-    verifyingContract: gold,
+    verifyingContract: bitcoin,
   };
 
   const data = {
@@ -49,19 +49,19 @@ async function signPermit(gold, privateKey, message) {
   }
 }
 
-describe('Gold', function () {
+describe('Bitcoin', function () {
   const [ ownerAddress, userAddress, poolAddress ] = accounts;
   const [ _, userPrivateKey ] = privateKeys;
 
   beforeEach(async function () {
     this.dao = await MockComptroller.new(poolAddress, {from: ownerAddress, gas: 8000000});
-    this.gold = await Gold.at(await this.dao.gold());
+    this.bitcoin = await Bitcoin.at(await this.dao.bitcoin());
   });
 
   describe('mint', function () {
     describe('not from dao', function () {
       it('reverts', async function () {
-        await expectRevert(this.gold.mint(userAddress, 100, {from: ownerAddress}), "MinterRole: caller does not have the Minter role");
+        await expectRevert(this.bitcoin.mint(userAddress, 100, {from: ownerAddress}), "MinterRole: caller does not have the Minter role");
       });
     });
 
@@ -70,8 +70,8 @@ describe('Gold', function () {
         await this.dao.mintToE(userAddress, 100);
       });
 
-      it('mints new Gold tokens', async function () {
-        expect(await this.gold.balanceOf(userAddress)).to.be.bignumber.equal(new BN(100));
+      it('mints new Bitcoin tokens', async function () {
+        expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(100));
       });
     });
   });
@@ -79,7 +79,7 @@ describe('Gold', function () {
   describe('delegate', function () {
     describe('zero deadline', function () {
       beforeEach(async function () {
-        this.signature = await signPermit(this.gold.address, userPrivateKey, {
+        this.signature = await signPermit(this.bitcoin.address, userPrivateKey, {
           owner: userAddress,
           spender: ownerAddress,
           value: new BN(1234).toString(),
@@ -90,7 +90,7 @@ describe('Gold', function () {
 
       it('reverts', async function () {
         await expectRevert(
-          this.gold.permit(userAddress, ownerAddress, 1234, 0, this.signature.v, this.signature.r, this.signature.s),
+          this.bitcoin.permit(userAddress, ownerAddress, 1234, 0, this.signature.v, this.signature.r, this.signature.s),
           "Permittable: Expired");
       });
     });
@@ -98,7 +98,7 @@ describe('Gold', function () {
     describe('valid expiration', function () {
       beforeEach(async function () {
         const expiration = (await time.latest()) + 100;
-        const signature = await signPermit(this.gold.address, userPrivateKey, {
+        const signature = await signPermit(this.bitcoin.address, userPrivateKey, {
           owner: userAddress,
           spender: ownerAddress,
           value: new BN(1234).toString(),
@@ -106,18 +106,18 @@ describe('Gold', function () {
           deadline: expiration
         });
 
-        await this.gold.permit(userAddress, ownerAddress, 1234, expiration, signature.v, signature.r, signature.s);
+        await this.bitcoin.permit(userAddress, ownerAddress, 1234, expiration, signature.v, signature.r, signature.s);
       });
 
       it('approves', async function () {
-        expect(await this.gold.allowance(userAddress, ownerAddress)).to.be.bignumber.equal(new BN(1234));
+        expect(await this.bitcoin.allowance(userAddress, ownerAddress)).to.be.bignumber.equal(new BN(1234));
       });
     });
 
     describe('invalid nonce', function () {
       beforeEach(async function () {
         this.expiration = (await time.latest()) + 100;
-        this.signature = await signPermit(this.gold.address, userPrivateKey, {
+        this.signature = await signPermit(this.bitcoin.address, userPrivateKey, {
           owner: userAddress,
           spender: ownerAddress,
           value: new BN(1234).toString(),
@@ -128,7 +128,7 @@ describe('Gold', function () {
 
       it('reverts', async function () {
         await expectRevert(
-          this.gold.permit(userAddress, ownerAddress, 1234, this.expiration, this.signature.v, this.signature.r, this.signature.s),
+          this.bitcoin.permit(userAddress, ownerAddress, 1234, this.expiration, this.signature.v, this.signature.r, this.signature.s),
           "Permittable: Invalid signature");
       });
     });
@@ -136,7 +136,7 @@ describe('Gold', function () {
     describe('nonce reuse', function () {
       beforeEach(async function () {
         this.expiration = (await time.latest()) + 100;
-        const signature = await signPermit(this.gold.address, userPrivateKey, {
+        const signature = await signPermit(this.bitcoin.address, userPrivateKey, {
           owner: userAddress,
           spender: ownerAddress,
           value: new BN(1234).toString(),
@@ -144,9 +144,9 @@ describe('Gold', function () {
           deadline: this.expiration
         });
 
-        await this.gold.permit(userAddress, ownerAddress, 1234, this.expiration, signature.v, signature.r, signature.s);
+        await this.bitcoin.permit(userAddress, ownerAddress, 1234, this.expiration, signature.v, signature.r, signature.s);
 
-        this.signature = await signPermit(this.gold.address, userPrivateKey, {
+        this.signature = await signPermit(this.bitcoin.address, userPrivateKey, {
           owner: userAddress,
           spender: ownerAddress,
           value: new BN(5678).toString(),
@@ -157,7 +157,7 @@ describe('Gold', function () {
 
       it('reverts', async function () {
         await expectRevert(
-          this.gold.permit(userAddress, ownerAddress, 5678, this.expiration, this.signature.v, this.signature.r, this.signature.s),
+          this.bitcoin.permit(userAddress, ownerAddress, 5678, this.expiration, this.signature.v, this.signature.r, this.signature.s),
           "Permittable: Invalid signature");
       });
     });
@@ -165,7 +165,7 @@ describe('Gold', function () {
     describe('expired', function () {
       beforeEach(async function () {
         this.expiration = (await time.latest()) - 100;
-        this.signature = await signPermit(this.gold.address, userPrivateKey, {
+        this.signature = await signPermit(this.bitcoin.address, userPrivateKey, {
           owner: userAddress,
           spender: ownerAddress,
           value: new BN(1234).toString(),
@@ -176,7 +176,7 @@ describe('Gold', function () {
 
       it('reverts', async function () {
         await expectRevert(
-          this.gold.permit(userAddress, ownerAddress, 1234, this.expiration, this.signature.v, this.signature.r, this.signature.s),
+          this.bitcoin.permit(userAddress, ownerAddress, 1234, this.expiration, this.signature.v, this.signature.r, this.signature.s),
           "Permittable: Expired");
       });
     });
@@ -184,7 +184,7 @@ describe('Gold', function () {
     describe('signature mismatch', function () {
       beforeEach(async function () {
         this.expiration = (await time.latest()) + 100;
-        this.signature = await signPermit(this.gold.address, userPrivateKey, {
+        this.signature = await signPermit(this.bitcoin.address, userPrivateKey, {
           owner: userAddress,
           spender: ownerAddress,
           value: new BN(1234).toString(),
@@ -195,7 +195,7 @@ describe('Gold', function () {
 
       it('reverts', async function () {
         await expectRevert(
-          this.gold.permit(userAddress, ownerAddress, 1235, this.expiration, this.signature.v, this.signature.r, this.signature.s),
+          this.bitcoin.permit(userAddress, ownerAddress, 1235, this.expiration, this.signature.v, this.signature.r, this.signature.s),
           "Permittable: Invalid signature");
       });
     });
@@ -208,13 +208,13 @@ describe('Gold', function () {
 
     describe('amount equals approved', function () {
       beforeEach('transferFrom', async function () {
-        await this.gold.approve(userAddress, 100, {from: ownerAddress});
-        const { logs } = await this.gold.transferFrom(ownerAddress, userAddress, 100, {from: userAddress});
+        await this.bitcoin.approve(userAddress, 100, {from: ownerAddress});
+        const { logs } = await this.bitcoin.transferFrom(ownerAddress, userAddress, 100, {from: userAddress});
         this.logs = logs;
       });
 
       it('decrements allowance', async function () {
-        const allowance = await this.gold.allowance(ownerAddress, userAddress);
+        const allowance = await this.bitcoin.allowance(ownerAddress, userAddress);
         expect(allowance).to.be.bignumber.equal(new BN(0));
       });
 
@@ -229,25 +229,25 @@ describe('Gold', function () {
 
     describe('amount greater than approved', function () {
       beforeEach('transferFrom', async function () {
-        await this.gold.approve(userAddress, 100, {from: ownerAddress});
+        await this.bitcoin.approve(userAddress, 100, {from: ownerAddress});
       });
 
       it('emits Transfer event', async function () {
         await expectRevert(
-          this.gold.transferFrom(ownerAddress, userAddress, 101, {from: userAddress}),
+          this.bitcoin.transferFrom(ownerAddress, userAddress, 101, {from: userAddress}),
           "ERC20: transfer amount exceeds balance");
       });
     });
 
     describe('approve unlimited', function () {
       beforeEach('transferFrom', async function () {
-        await this.gold.approve(userAddress, constants.MAX_UINT256, {from: ownerAddress});
-        const { logs } = await this.gold.transferFrom(ownerAddress, userAddress, 100, {from: userAddress});
+        await this.bitcoin.approve(userAddress, constants.MAX_UINT256, {from: ownerAddress});
+        const { logs } = await this.bitcoin.transferFrom(ownerAddress, userAddress, 100, {from: userAddress});
         this.logs = logs;
       });
 
       it('doesnt decrement allowance', async function () {
-        const allowance = await this.gold.allowance(ownerAddress, userAddress);
+        const allowance = await this.bitcoin.allowance(ownerAddress, userAddress);
         expect(allowance).to.be.bignumber.equal(constants.MAX_UINT256);
       });
 

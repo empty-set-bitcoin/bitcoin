@@ -1,4 +1,3 @@
-
 pragma solidity ^0.5.17;
 pragma experimental ABIEncoderV2;
 
@@ -15,30 +14,40 @@ contract Bonding is Setters, Permission {
 
     event Deposit(address indexed account, uint256 value);
     event Withdraw(address indexed account, uint256 value);
-    event Bond(address indexed account, uint256 start, uint256 value, uint256 valueUnderlying);
-    event Unbond(address indexed account, uint256 start, uint256 value, uint256 valueUnderlying);
+    event Bond(
+        address indexed account,
+        uint256 start,
+        uint256 value,
+        uint256 valueUnderlying
+    );
+    event Unbond(
+        address indexed account,
+        uint256 start,
+        uint256 value,
+        uint256 valueUnderlying
+    );
 
     function step() internal {
-        Require.that(
-            epochTime() > epoch(),
-            FILE,
-            "Still current epoch"
-        );
+        Require.that(epochTime() > epoch(), FILE, "Still current epoch");
 
         snapshotTotalBonded();
         incrementEpoch();
     }
 
     function deposit(uint256 value) external onlyFrozenOrLocked(msg.sender) {
-        gold().transferFrom(msg.sender, address(this), value);
+        bitcoin().transferFrom(msg.sender, address(this), value);
         incrementBalanceOfStaged(msg.sender, value);
 
         emit Deposit(msg.sender, value);
     }
 
     function withdraw(uint256 value) external onlyFrozenOrLocked(msg.sender) {
-        gold().transfer(msg.sender, value);
-        decrementBalanceOfStaged(msg.sender, value, "Bonding: insufficient staged balance");
+        bitcoin().transfer(msg.sender, value);
+        decrementBalanceOfStaged(
+            msg.sender,
+            value,
+            "Bonding: insufficient staged balance"
+        );
 
         emit Withdraw(msg.sender, value);
     }
@@ -46,12 +55,17 @@ contract Bonding is Setters, Permission {
     function bond(uint256 value) external onlyFrozenOrFluid(msg.sender) {
         unfreeze(msg.sender);
 
-        uint256 balance = totalBonded() == 0 ?
-            value.mul(Constants.getInitialStakeMultiple()) :
-            value.mul(totalSupply()).div(totalBonded());
+        uint256 balance =
+            totalBonded() == 0
+                ? value.mul(Constants.getInitialStakeMultiple())
+                : value.mul(totalSupply()).div(totalBonded());
         incrementBalanceOf(msg.sender, balance);
         incrementTotalBonded(value);
-        decrementBalanceOfStaged(msg.sender, value, "Bonding: insufficient staged balance");
+        decrementBalanceOfStaged(
+            msg.sender,
+            value,
+            "Bonding: insufficient staged balance"
+        );
 
         emit Bond(msg.sender, epoch().add(1), balance, value);
     }
@@ -59,7 +73,8 @@ contract Bonding is Setters, Permission {
     function unbond(uint256 value) external onlyFrozenOrFluid(msg.sender) {
         unfreeze(msg.sender);
 
-        uint256 staged = value.mul(balanceOfBonded(msg.sender)).div(balanceOf(msg.sender));
+        uint256 staged =
+            value.mul(balanceOfBonded(msg.sender)).div(balanceOf(msg.sender));
         incrementBalanceOfStaged(msg.sender, staged);
         decrementTotalBonded(staged, "Bonding: insufficient total bonded");
         decrementBalanceOf(msg.sender, value, "Bonding: insufficient balance");
@@ -67,13 +82,20 @@ contract Bonding is Setters, Permission {
         emit Unbond(msg.sender, epoch().add(1), value, staged);
     }
 
-    function unbondUnderlying(uint256 value) external onlyFrozenOrFluid(msg.sender) {
+    function unbondUnderlying(uint256 value)
+        external
+        onlyFrozenOrFluid(msg.sender)
+    {
         unfreeze(msg.sender);
 
         uint256 balance = value.mul(totalSupply()).div(totalBonded());
         incrementBalanceOfStaged(msg.sender, value);
         decrementTotalBonded(value, "Bonding: insufficient total bonded");
-        decrementBalanceOf(msg.sender, balance, "Bonding: insufficient balance");
+        decrementBalanceOf(
+            msg.sender,
+            balance,
+            "Bonding: insufficient balance"
+        );
 
         emit Unbond(msg.sender, epoch().add(1), balance, value);
     }

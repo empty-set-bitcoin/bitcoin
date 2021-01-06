@@ -4,7 +4,7 @@ const { BN, expectRevert, expectEvent, time } = require('@openzeppelin/test-help
 const { expect } = require('chai');
 
 const MockMarket = contract.fromArtifact('MockMarket');
-const Gold = contract.fromArtifact('Gold');
+const Bitcoin = contract.fromArtifact('Bitcoin');
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 const MAX_UINT256 = new BN(2).pow(new BN(256)).subn(1);
@@ -14,12 +14,12 @@ describe('Market', function () {
 
   beforeEach(async function () {
     this.market = await MockMarket.new(poolAddress, {from: ownerAddress, gas: 8000000});
-    this.gold = await Gold.at(await this.market.gold());
+    this.bitcoin = await Bitcoin.at(await this.market.bitcoin());
 
     await this.market.incrementEpochE();
     await this.market.stepE();
     await this.market.mintToE(userAddress, 1000000);
-    await this.gold.approve(this.market.address, 1000000, {from: userAddress});
+    await this.bitcoin.approve(this.market.address, 1000000, {from: userAddress});
   });
 
   describe('purchaseCoupons', function () {
@@ -57,17 +57,17 @@ describe('Market', function () {
       });
 
       it('updates user balances', async function () {
-        expect(await this.gold.balanceOf(userAddress)).to.be.bignumber.equal(new BN(900000));
+        expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(900000));
         expect(await this.market.balanceOfCoupons(userAddress, 1)).to.be.bignumber.equal(new BN(103703));
       });
 
       it('shows correct preimum', async function () {
-        expect(await this.gold.balanceOf(userAddress)).to.be.bignumber.equal(new BN(900000));
+        expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(900000));
         expect(await this.market.balanceOfCoupons(userAddress, 1)).to.be.bignumber.equal(new BN(103703));
       });
 
       it('updates dao balances', async function () {
-        expect(await this.gold.balanceOf(this.market.address)).to.be.bignumber.equal(new BN(0));
+        expect(await this.bitcoin.balanceOf(this.market.address)).to.be.bignumber.equal(new BN(0));
         expect(await this.market.totalCoupons()).to.be.bignumber.equal(new BN(103703));
         expect(await this.market.totalDebt()).to.be.bignumber.equal(new BN(0));
         expect(await this.market.totalRedeemable()).to.be.bignumber.equal(new BN(0));
@@ -79,7 +79,7 @@ describe('Market', function () {
         });
 
         expect(event.args.epoch).to.be.bignumber.equal(new BN(1));
-        expect(event.args.goldAmount).to.be.bignumber.equal(new BN(100000));
+        expect(event.args.bitcoinAmount).to.be.bignumber.equal(new BN(100000));
         expect(event.args.couponAmount).to.be.bignumber.equal(new BN(103703));
       });
     });
@@ -93,12 +93,12 @@ describe('Market', function () {
       });
 
       it('updates user balances', async function () {
-        expect(await this.gold.balanceOf(userAddress)).to.be.bignumber.equal(new BN(900000));
+        expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(900000));
         expect(await this.market.balanceOfCoupons(userAddress, 1)).to.be.bignumber.equal(new BN(103805));
       });
 
       it('updates dao balances', async function () {
-        expect(await this.gold.balanceOf(this.market.address)).to.be.bignumber.equal(new BN(0));
+        expect(await this.bitcoin.balanceOf(this.market.address)).to.be.bignumber.equal(new BN(0));
         expect(await this.market.totalCoupons()).to.be.bignumber.equal(new BN(103805));
         expect(await this.market.totalDebt()).to.be.bignumber.equal(new BN(0));
         expect(await this.market.totalRedeemable()).to.be.bignumber.equal(new BN(0));
@@ -110,7 +110,7 @@ describe('Market', function () {
         });
 
         expect(event.args.epoch).to.be.bignumber.equal(new BN(1));
-        expect(event.args.goldAmount).to.be.bignumber.equal(new BN(50000));
+        expect(event.args.bitcoinAmount).to.be.bignumber.equal(new BN(50000));
         expect(event.args.couponAmount).to.be.bignumber.equal(new BN(50925));
       });
     });
@@ -158,12 +158,12 @@ describe('Market', function () {
         });
 
         it('updates user balances', async function () {
-          expect(await this.gold.balanceOf(userAddress)).to.be.bignumber.equal(new BN(1000000));
+          expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(1000000));
           expect(await this.market.balanceOfCoupons(userAddress, 1)).to.be.bignumber.equal(new BN(3703));
         });
 
         it('updates dao balances', async function () {
-          expect(await this.gold.balanceOf(this.market.address)).to.be.bignumber.equal(new BN(0));
+          expect(await this.bitcoin.balanceOf(this.market.address)).to.be.bignumber.equal(new BN(0));
           expect(await this.market.totalCoupons()).to.be.bignumber.equal(new BN(3703));
           expect(await this.market.totalDebt()).to.be.bignumber.equal(new BN(0));
           expect(await this.market.totalRedeemable()).to.be.bignumber.equal(new BN(0));
@@ -187,12 +187,12 @@ describe('Market', function () {
         });
 
         it('updates user balances', async function () {
-          expect(await this.gold.balanceOf(userAddress)).to.be.bignumber.equal(new BN(980000));
+          expect(await this.bitcoin.balanceOf(userAddress)).to.be.bignumber.equal(new BN(980000));
           expect(await this.market.balanceOfCoupons(userAddress, 1)).to.be.bignumber.equal(new BN(23703));
         });
 
         it('updates dao balances', async function () {
-          expect(await this.gold.balanceOf(this.market.address)).to.be.bignumber.equal(new BN(20000));
+          expect(await this.bitcoin.balanceOf(this.market.address)).to.be.bignumber.equal(new BN(20000));
           expect(await this.market.totalCoupons()).to.be.bignumber.equal(new BN(23703));
           expect(await this.market.totalDebt()).to.be.bignumber.equal(new BN(0));
           expect(await this.market.totalRedeemable()).to.be.bignumber.equal(new BN(20000));

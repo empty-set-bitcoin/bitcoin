@@ -3,7 +3,7 @@ const { accounts, contract } = require('@openzeppelin/test-environment');
 const { BN, expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
 const { expect } = require('chai');
 
-const Gold = contract.fromArtifact('Gold');
+const Bitcoin = contract.fromArtifact('Bitcoin');
 const MockGovern = contract.fromArtifact('MockGovern');
 const MockImplA = contract.fromArtifact('MockImplA');
 const MockImplB = contract.fromArtifact('MockImplB');
@@ -16,14 +16,14 @@ const UNDECIDED = new BN(0);
 const APPROVE = new BN(1);
 const REJECT = new BN(2);
 
-const INITIAL_STAKE_MULTIPLE = new BN(10).pow(new BN(6)); // 100 ESG -> 100M ESGS
+const INITIAL_STAKE_MULTIPLE = new BN(10).pow(new BN(6)); // 100 ESB -> 100M ESBS
 
 describe('Govern', function () {
   const [ ownerAddress, userAddress, userAddress2, userAddress3 ] = accounts;
 
   beforeEach(async function () {
     this.govern = await MockGovern.new({from: ownerAddress, gas: 8000000});
-    this.gold = await Gold.at(await this.govern.gold());
+    this.bitcoin = await Bitcoin.at(await this.govern.bitcoin());
 
     this.implA = await MockImplA.new({from: ownerAddress});
     this.implB = await MockImplB.new({from: ownerAddress});

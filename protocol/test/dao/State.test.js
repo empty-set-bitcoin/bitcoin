@@ -21,13 +21,13 @@ describe('State', function () {
   describe('erc20 details', function () {
     describe('name', function () {
       it('increments total bonded', async function () {
-        expect(await this.setters.name()).to.be.equal("Empty Set Gold Stake");
+        expect(await this.setters.name()).to.be.equal("Empty Set Bitcoin Stake");
       });
     });
 
     describe('symbol', function () {
       it('increments total bonded', async function () {
-        expect(await this.setters.symbol()).to.be.equal("ESGS");
+        expect(await this.setters.symbol()).to.be.equal("ESBS");
       });
     });
 
