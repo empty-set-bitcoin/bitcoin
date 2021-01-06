@@ -1,4 +1,3 @@
-
 pragma solidity ^0.5.17;
 pragma experimental ABIEncoderV2;
 
@@ -10,18 +9,19 @@ contract Getters is State {
     using SafeMath for uint256;
     using Decimal for Decimal.D256;
 
-    bytes32 private constant IMPLEMENTATION_SLOT = 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;
+    bytes32 private constant IMPLEMENTATION_SLOT =
+        0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;
 
     /**
      * ERC20 Interface
      */
 
     function name() public view returns (string memory) {
-        return "Empty Set Gold Stake";
+        return "Empty Set Bitcoin Stake";
     }
 
     function symbol() public view returns (string memory) {
-        return "ESGS";
+        return "ESBS";
     }
 
     function decimals() public view returns (uint8) {
@@ -36,7 +36,11 @@ contract Getters is State {
         return _state.balance.supply;
     }
 
-    function allowance(address owner, address spender) external view returns (uint256) {
+    function allowance(address owner, address spender)
+        external
+        view
+        returns (uint256)
+    {
         return 0;
     }
 
@@ -44,8 +48,8 @@ contract Getters is State {
      * Global
      */
 
-    function gold() public view returns (IGold) {
-        return _state.provider.gold;
+    function bitcoin() public view returns (IBitcoin) {
+        return _state.provider.bitcoin;
     }
 
     function oracle() public view returns (IOracle) {
@@ -77,7 +81,7 @@ contract Getters is State {
     }
 
     function totalNet() public view returns (uint256) {
-        return gold().totalSupply().sub(totalDebt());
+        return bitcoin().totalSupply().sub(totalDebt());
     }
 
     /**
@@ -96,7 +100,11 @@ contract Getters is State {
         return totalBonded().mul(balanceOf(account)).div(totalSupply);
     }
 
-    function balanceOfCoupons(address account, uint256 epoch) public view returns (uint256) {
+    function balanceOfCoupons(address account, uint256 epoch)
+        public
+        view
+        returns (uint256)
+    {
         if (outstandingCoupons(epoch) == 0) {
             return 0;
         }
@@ -108,7 +116,10 @@ contract Getters is State {
             return Account.Status.Locked;
         }
 
-        return epoch() >= _state.accounts[account].fluidUntil ? Account.Status.Frozen : Account.Status.Fluid;
+        return
+            epoch() >= _state.accounts[account].fluidUntil
+                ? Account.Status.Frozen
+                : Account.Status.Fluid;
     }
 
     function fluidUntil(address account) public view returns (uint256) {
@@ -119,7 +130,11 @@ contract Getters is State {
         return _state.accounts[account].lockedUntil;
     }
 
-    function allowanceCoupons(address owner, address spender) public view returns (uint256) {
+    function allowanceCoupons(address owner, address spender)
+        public
+        view
+        returns (uint256)
+    {
         return _state.accounts[owner].couponAllowances[spender];
     }
 
@@ -132,10 +147,13 @@ contract Getters is State {
     }
 
     function epochTime() public view returns (uint256) {
-        Constants.EpochStrategy memory strategy = Constants.getCurrentEpochStrategy();
-        return blockTimestamp().sub(strategy.start).div(strategy.period).add(strategy.offset);
+        Constants.EpochStrategy memory strategy =
+            Constants.getCurrentEpochStrategy();
+        return
+            blockTimestamp().sub(strategy.start).div(strategy.period).add(
+                strategy.offset
+            );
     }
-
 
     // Overridable for testing
     function blockTimestamp() internal view returns (uint256) {
@@ -154,7 +172,11 @@ contract Getters is State {
         return _state.epochs[epoch].coupons.expiring.length;
     }
 
-    function expiringCouponsAtIndex(uint256 epoch, uint256 i) public view returns (uint256) {
+    function expiringCouponsAtIndex(uint256 epoch, uint256 i)
+        public
+        view
+        returns (uint256)
+    {
         return _state.epochs[epoch].coupons.expiring[i];
     }
 
@@ -170,7 +192,11 @@ contract Getters is State {
      * Governance
      */
 
-    function recordedVote(address account, address candidate) public view returns (Candidate.Vote) {
+    function recordedVote(address account, address candidate)
+        public
+        view
+        returns (Candidate.Vote)
+    {
         return _state.candidates[candidate].votes[account];
     }
 

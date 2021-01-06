@@ -20,9 +20,9 @@
 
 require('dotenv').config();
 const PrivateKeyProvider = require('truffle-privatekey-provider');
-const privateKey = process.env.ESG_PRIVATE_KEY;
-const infuraId = process.env.ESG_INFURA_ID;
-const etherscanKey = process.env.ESG_ETHERSCAN_KEY;
+const privateKey = process.env.ESB_PRIVATE_KEY;
+const infuraId = process.env.ESB_INFURA_ID;
+const etherscanKey = process.env.ESB_ETHERSCAN_KEY;
 
 module.exports = {
   /**
@@ -47,7 +47,7 @@ module.exports = {
       port: 8545,            // Standard Ethereum port (default: none)
       network_id: "*",       // Any network (default: none)
       skipDryRun: true,
-      gas: 8000000,
+      // gas: 8000000,
     },
 
     //Another network with more advanced options...

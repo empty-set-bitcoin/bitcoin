@@ -1,4 +1,3 @@
-
 pragma solidity ^0.5.17;
 pragma experimental ABIEncoderV2;
 
@@ -15,9 +14,9 @@ contract Implementation is State, Bonding, Market, Regulator, Govern {
     event Advance(uint256 indexed epoch, uint256 block, uint256 timestamp);
     event Incentivization(address indexed account, uint256 amount);
 
-    function initialize() initializer public {
+    function initialize() public initializer {
         // Dev rewards
-        incentivize(msg.sender, 5e17); // 0.5 ESG
+        incentivize(msg.sender, 5e17); // 0.5 ESB
     }
 
     function advance() external {

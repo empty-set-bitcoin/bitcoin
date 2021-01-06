@@ -1,4 +1,3 @@
-
 pragma solidity ^0.5.17;
 pragma experimental ABIEncoderV2;
 
@@ -12,7 +11,7 @@ contract Comptroller is Setters {
     bytes32 private constant FILE = "Comptroller";
 
     function mintToAccount(address account, uint256 amount) internal {
-        gold().mint(account, amount);
+        bitcoin().mint(account, amount);
         if (!bootstrappingAt(epoch())) {
             increaseDebt(amount);
         }
@@ -21,23 +20,29 @@ contract Comptroller is Setters {
     }
 
     function burnFromAccount(address account, uint256 amount) internal {
-        gold().transferFrom(account, address(this), amount);
-        gold().burn(amount);
+        bitcoin().transferFrom(account, address(this), amount);
+        bitcoin().burn(amount);
         decrementTotalDebt(amount, "Comptroller: not enough outstanding debt");
 
         balanceCheck();
     }
 
     function redeemToAccount(address account, uint256 amount) internal {
-        gold().transfer(account, amount);
-        decrementTotalRedeemable(amount, "Comptroller: not enough redeemable balance");
+        bitcoin().transfer(account, amount);
+        decrementTotalRedeemable(
+            amount,
+            "Comptroller: not enough redeemable balance"
+        );
 
         balanceCheck();
     }
 
     function burnRedeemable(uint256 amount) internal {
-        gold().burn(amount);
-        decrementTotalRedeemable(amount, "Comptroller: not enough redeemable balance");
+        bitcoin().burn(amount);
+        decrementTotalRedeemable(
+            amount,
+            "Comptroller: not enough redeemable balance"
+        );
 
         balanceCheck();
     }
@@ -57,22 +62,32 @@ contract Comptroller is Setters {
         balanceCheck();
     }
 
-    function increaseSupply(uint256 newSupply) internal returns (uint256, uint256) {
+    function increaseSupply(uint256 newSupply)
+        internal
+        returns (uint256, uint256)
+    {
         uint256 rewards;
 
-        if (Constants.getTreasuryAddress() == address(0x0000000000000000000000000000000000000000)) {
+        if (
+            Constants.getTreasuryAddress() ==
+            address(0x0000000000000000000000000000000000000000)
+        ) {
             // Pay out to Pool, with treasury reward in addition
-            uint256 poolAllocation = newSupply.mul(Constants.getOraclePoolRatio()).div(100);
-            uint256 treasuryAllocation = newSupply.mul(Constants.getTreasuryRatio()).div(10000);
+            uint256 poolAllocation =
+                newSupply.mul(Constants.getOraclePoolRatio()).div(100);
+            uint256 treasuryAllocation =
+                newSupply.mul(Constants.getTreasuryRatio()).div(10000);
             rewards = poolAllocation.add(treasuryAllocation);
             mintToPool(rewards);
         } else {
             // 0-a. Pay out to Pool
-            uint256 poolReward = newSupply.mul(Constants.getOraclePoolRatio()).div(100);
+            uint256 poolReward =
+                newSupply.mul(Constants.getOraclePoolRatio()).div(100);
             mintToPool(poolReward);
 
             // 0-b. Pay out to Treasury
-            uint256 treasuryReward = newSupply.mul(Constants.getTreasuryRatio()).div(10000);
+            uint256 treasuryReward =
+                newSupply.mul(Constants.getTreasuryRatio()).div(10000);
             mintToTreasury(treasuryReward);
 
             rewards = poolReward.add(treasuryReward);
@@ -86,7 +101,9 @@ contract Comptroller is Setters {
         uint256 totalCoupons = totalCoupons();
         if (totalRedeemable < totalCoupons) {
             newRedeemable = totalCoupons.sub(totalRedeemable);
-            newRedeemable = newRedeemable > newSupply ? newSupply : newRedeemable;
+            newRedeemable = newRedeemable > newSupply
+                ? newSupply
+                : newRedeemable;
             mintToRedeemable(newRedeemable);
             newSupply = newSupply.sub(newRedeemable);
         }
@@ -104,8 +121,12 @@ contract Comptroller is Setters {
         return (newRedeemable, newSupply.add(rewards));
     }
 
-    function resetDebt(Decimal.D256 memory targetDebtRatio) internal returns (uint256) {
-        uint256 targetDebt = targetDebtRatio.mul(gold().totalSupply()).asUint256();
+    function resetDebt(Decimal.D256 memory targetDebtRatio)
+        internal
+        returns (uint256)
+    {
+        uint256 targetDebt =
+            targetDebtRatio.mul(bitcoin().totalSupply()).asUint256();
         uint256 currentDebt = totalDebt();
 
         if (currentDebt > targetDebt) {
@@ -120,7 +141,8 @@ contract Comptroller is Setters {
 
     function balanceCheck() private {
         Require.that(
-            gold().balanceOf(address(this)) >= totalBonded().add(totalStaged()).add(totalRedeemable()),
+            bitcoin().balanceOf(address(this)) >=
+                totalBonded().add(totalStaged()).add(totalRedeemable()),
             FILE,
             "Inconsistent balances"
         );
@@ -128,25 +150,25 @@ contract Comptroller is Setters {
 
     function mintToDAO(uint256 amount) private {
         if (amount > 0) {
-            gold().mint(address(this), amount);
+            bitcoin().mint(address(this), amount);
             incrementTotalBonded(amount);
         }
     }
 
     function mintToPool(uint256 amount) private {
         if (amount > 0) {
-            gold().mint(pool(), amount);
+            bitcoin().mint(pool(), amount);
         }
     }
 
     function mintToTreasury(uint256 amount) private {
         if (amount > 0) {
-            gold().mint(Constants.getTreasuryAddress(), amount);
+            bitcoin().mint(Constants.getTreasuryAddress(), amount);
         }
     }
 
     function mintToRedeemable(uint256 amount) private {
-        gold().mint(address(this), amount);
+        bitcoin().mint(address(this), amount);
         incrementTotalRedeemable(amount);
 
         balanceCheck();

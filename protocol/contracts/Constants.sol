@@ -1,4 +1,3 @@
-
 pragma solidity ^0.5.17;
 pragma experimental ABIEncoderV2;
 
@@ -10,14 +9,15 @@ library Constants {
 
     /* Bootstrapping */
     uint256 private constant BOOTSTRAPPING_PERIOD = 56; // 14 days
-    uint256 private constant BOOTSTRAPPING_PRICE = 11e17; // ESG price == 1.10 * sXAU
+    uint256 private constant BOOTSTRAPPING_PRICE = 11e17; // ESB price == 1.10 * sBTC
 
     /* Oracle */
-    address private constant sXAU = address(0x261EfCdD24CeA98652B9700800a13DfBca4103fF);
+    address private constant sBTC =
+        address(0xfE18be6b3Bd88A2D2A7f928d00292E7a9963CfC6);
     uint256 private constant ORACLE_RESERVE_MINIMUM = 1e18;
 
     /* Bonding */
-    uint256 private constant INITIAL_STAKE_MULTIPLE = 1e6; // 100 ESG -> 100M ESGS
+    uint256 private constant INITIAL_STAKE_MULTIPLE = 1e6; // 100 ESB -> 100M ESBS
 
     /* Epoch */
     struct EpochStrategy {
@@ -39,7 +39,7 @@ library Constants {
     uint256 private constant GOVERNANCE_EMERGENCY_DELAY = 6; // 6 epochs
 
     /* DAO */
-    uint256 private constant ADVANCE_INCENTIVE = 1e17; // 0.1 ESG
+    uint256 private constant ADVANCE_INCENTIVE = 1e17; // 0.1 ESB
     uint256 private constant DAO_EXIT_LOCKUP_EPOCHS = 20; // 5 days
 
     /* Pool */
@@ -56,22 +56,28 @@ library Constants {
     uint256 private constant TREASURY_RATIO = 250; // 2.5%, until TREASURY_ADDRESS is set, this portion is sent to LP
 
     // TODO: vote on recipient
-    address private constant TREASURY_ADDRESS = address(0x0000000000000000000000000000000000000000);
+    address private constant TREASURY_ADDRESS =
+        address(0x0000000000000000000000000000000000000000);
 
-    function getSXAUAddress() internal pure returns (address) {
-        return sXAU;
+    function getSBTCAddress() internal pure returns (address) {
+        return sBTC;
     }
 
     function getOracleReserveMinimum() internal pure returns (uint256) {
         return ORACLE_RESERVE_MINIMUM;
     }
 
-    function getCurrentEpochStrategy() internal pure returns (EpochStrategy memory) {
-        return EpochStrategy({
-            offset: EPOCH_OFFSET,
-            start: EPOCH_START,
-            period: EPOCH_PERIOD
-        });
+    function getCurrentEpochStrategy()
+        internal
+        pure
+        returns (EpochStrategy memory)
+    {
+        return
+            EpochStrategy({
+                offset: EPOCH_OFFSET,
+                start: EPOCH_START,
+                period: EPOCH_PERIOD
+            });
     }
 
     function getInitialStakeMultiple() internal pure returns (uint256) {
@@ -82,7 +88,11 @@ library Constants {
         return BOOTSTRAPPING_PERIOD;
     }
 
-    function getBootstrappingPrice() internal pure returns (Decimal.D256 memory) {
+    function getBootstrappingPrice()
+        internal
+        pure
+        returns (Decimal.D256 memory)
+    {
         return Decimal.D256({value: BOOTSTRAPPING_PRICE});
     }
 
@@ -98,11 +108,19 @@ library Constants {
         return Decimal.D256({value: GOVERNANCE_QUORUM});
     }
 
-    function getGovernanceProposalThreshold() internal pure returns (Decimal.D256 memory) {
+    function getGovernanceProposalThreshold()
+        internal
+        pure
+        returns (Decimal.D256 memory)
+    {
         return Decimal.D256({value: GOVERNANCE_PROPOSAL_THRESHOLD});
     }
 
-    function getGovernanceSuperMajority() internal pure returns (Decimal.D256 memory) {
+    function getGovernanceSuperMajority()
+        internal
+        pure
+        returns (Decimal.D256 memory)
+    {
         return Decimal.D256({value: GOVERNANCE_SUPER_MAJORITY});
     }
 
@@ -130,11 +148,19 @@ library Constants {
         return Decimal.D256({value: DEBT_RATIO_CAP});
     }
 
-    function getSupplyChangeLimit() internal pure returns (Decimal.D256 memory) {
+    function getSupplyChangeLimit()
+        internal
+        pure
+        returns (Decimal.D256 memory)
+    {
         return Decimal.D256({value: SUPPLY_CHANGE_LIMIT});
     }
 
-    function getCouponSupplyChangeLimit() internal pure returns (Decimal.D256 memory) {
+    function getCouponSupplyChangeLimit()
+        internal
+        pure
+        returns (Decimal.D256 memory)
+    {
         return Decimal.D256({value: COUPON_SUPPLY_CHANGE_LIMIT});
     }
 

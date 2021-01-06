@@ -14,7 +14,7 @@ Fully decentralized self-stabilizing bitcoin, guided by a DAO.
 ### mainnet
 
 - `` **DAO**
-- `` **Gold**
+- `` **Bitcoin**
 - `` **Oracle**
 - `` **UniswapV2 sBTC:ESB Pair**
 - `` **LP Incentivation Pool**
