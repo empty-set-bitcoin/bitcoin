@@ -26,7 +26,7 @@ library Constants {
         uint256 period;
     }
 
-    uint256 private constant EPOCH_START = 1609027200; // 2020-12-27T00:00:00+00:00
+    uint256 private constant EPOCH_START = 1610323200; // 1/10/2021, 7:00:00 PM Standard Time)
     uint256 private constant EPOCH_OFFSET = 0;
     uint256 private constant EPOCH_PERIOD = 21600; // 6 hours
 
