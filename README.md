@@ -5,8 +5,8 @@ Fully decentralized self-stabilizing bitcoin, guided by a DAO. This application 
 ## The Token
 
 - shorthand name: `bitcoin`
-- full name: `Dynamic Set Bitcoin`
-- symbol: `DSB`
+- full name: `Empty Set Bitcoin`
+- symbol: `ESB`
 - decimals: `18`
 
 ## contracts
@@ -16,7 +16,7 @@ Fully decentralized self-stabilizing bitcoin, guided by a DAO. This application 
 - `` **DAO**
 - `` **Bitcoin**
 - `` **Oracle**
-- `` **UniswapV2 sBTC:DSB Pair**
+- `` **UniswapV2 sBTC:ESB Pair**
 - `` **LP Incentivation Pool**
 
 ## audit

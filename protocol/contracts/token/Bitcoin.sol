@@ -16,7 +16,7 @@ contract Bitcoin is
 {
     constructor()
         public
-        ERC20Detailed("Dynamic Set Bitcoin", "DSB", 18)
+        ERC20Detailed("Empty Set Bitcoin", "ESB", 18)
         Permittable()
     {}
 
