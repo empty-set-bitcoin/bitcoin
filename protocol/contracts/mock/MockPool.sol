@@ -4,22 +4,22 @@ pragma experimental ABIEncoderV2;
 import "../oracle/Pool.sol";
 
 contract MockPool is Pool {
-    address private _sBTC;
+    address private _WBTC;
 
     constructor(
-        address sBTC,
+        address WBTC,
         address bitcoin,
         address univ2
     ) public Pool(bitcoin, univ2) {
-        _sBTC = sBTC;
+        _WBTC = WBTC;
     }
 
     function set(address dao) external {
         _state.provider.dao = IDAO(dao);
     }
 
-    function sBTC() public view returns (address) {
-        return _sBTC;
+    function WBTC() public view returns (address) {
+        return _WBTC;
     }
 
     function dao() public view returns (IDAO) {

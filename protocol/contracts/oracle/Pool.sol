@@ -25,19 +25,19 @@ contract Pool is PoolSetters {
         internal
         returns (uint256, uint256)
     {
-        (address bitcoin, address sBTC) =
-            (address(_state.provider.bitcoin), sBTC());
-        (uint256 reserveA, uint256 reserveB) = getReserves(bitcoin, sBTC);
+        (address bitcoin, address WBTC) =
+            (address(_state.provider.bitcoin), WBTC());
+        (uint256 reserveA, uint256 reserveB) = getReserves(bitcoin, WBTC);
 
-        uint256 sBTCAmount =
+        uint256 WBTCAmount =
             (reserveA == 0 && reserveB == 0)
                 ? bitcoinAmount
                 : UniswapV2Library.quote(bitcoinAmount, reserveA, reserveB);
 
         address pair = address(_state.provider.univ2);
         IERC20(bitcoin).transfer(pair, bitcoinAmount);
-        IERC20(sBTC).transferFrom(msg.sender, pair, sBTCAmount);
-        return (sBTCAmount, IUniswapV2Pair(pair).mint(address(this)));
+        IERC20(WBTC).transferFrom(msg.sender, pair, WBTCAmount);
+        return (WBTCAmount, IUniswapV2Pair(pair).mint(address(this)));
     }
 
     // overridable for testing
@@ -72,7 +72,7 @@ contract Pool is PoolSetters {
     event Provide(
         address indexed account,
         uint256 value,
-        uint256 lessSBTC,
+        uint256 lessWBTC,
         uint256 newUniv2
     );
 
@@ -191,7 +191,7 @@ contract Pool is PoolSetters {
             "insufficient rewarded balance"
         );
 
-        (uint256 lessSBTC, uint256 newUniv2) = addLiquidity(value);
+        (uint256 lessWBTC, uint256 newUniv2) = addLiquidity(value);
 
         uint256 totalRewardedWithPhantom =
             totalRewarded(_state.provider.bitcoin).add(totalPhantom()).add(
@@ -205,7 +205,7 @@ contract Pool is PoolSetters {
 
         balanceCheck();
 
-        emit Provide(msg.sender, value, lessSBTC, newUniv2);
+        emit Provide(msg.sender, value, lessWBTC, newUniv2);
     }
 
     function emergencyWithdraw(address token, uint256 value) external onlyDao {

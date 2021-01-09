@@ -16,7 +16,7 @@ Fully decentralized self-stabilizing bitcoin, guided by a DAO. This application 
 - `` **DAO**
 - `` **Bitcoin**
 - `` **Oracle**
-- `` **UniswapV2 sBTC:ESB Pair**
+- `` **UniswapV2 WBTC:ESB Pair**
 - `` **LP Incentivation Pool**
 
 ## audit

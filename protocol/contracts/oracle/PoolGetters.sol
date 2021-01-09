@@ -12,8 +12,8 @@ contract PoolGetters is PoolState {
      * Global
      */
 
-    function sBTC() public view returns (address) {
-        return Constants.getSBTCAddress();
+    function WBTC() public view returns (address) {
+        return Constants.getWBTCAddress();
     }
 
     function dao() public view returns (IDAO) {

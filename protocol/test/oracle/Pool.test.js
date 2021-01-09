@@ -24,9 +24,9 @@ describe('Pool', function () {
     this.dao = await MockSettableDAO.new({from: ownerAddress, gas: 8000000});
     await this.dao.set(1);
     this.bitcoin = await MockToken.new("Empty Set Bitcoin", "ESB", 18, {from: ownerAddress, gas: 8000000});
-    this.sBTC = await MockToken.new("sBTC", "Synth sBTC", 18, {from: ownerAddress, gas: 8000000});
+    this.WBTC = await MockToken.new("WBTC", "Synth WBTC", 18, {from: ownerAddress, gas: 8000000});
     this.univ2 = await MockUniswapV2PairLiquidity.new({from: ownerAddress, gas: 8000000});
-    this.pool = await MockPool.new(this.sBTC.address, this.bitcoin.address, this.univ2.address, {from: ownerAddress, gas: 8000000});
+    this.pool = await MockPool.new(this.WBTC.address, this.bitcoin.address, this.univ2.address, {from: ownerAddress, gas: 8000000});
     await this.pool.set(this.dao.address);
   });
 
@@ -835,8 +835,8 @@ describe('Pool', function () {
         const phantomAfterNewBonded = phantomAfterLessReward.add(new BN(10).mul(INITIAL_STAKE_MULTIPLE).addn(10));
 
         beforeEach(async function () {
-          await this.sBTC.mint(userAddress, 1000);
-          await this.sBTC.approve(this.pool.address, 1000, {from: userAddress});
+          await this.WBTC.mint(userAddress, 1000);
+          await this.WBTC.approve(this.pool.address, 1000, {from: userAddress});
 
           await this.univ2.set(1000, 1000, 10);
 
@@ -872,7 +872,7 @@ describe('Pool', function () {
           });
 
           expect(event.args.value).to.be.bignumber.equal(new BN(1000));
-          expect(event.args.lessSBTC).to.be.bignumber.equal(new BN(1000));
+          expect(event.args.lessWBTC).to.be.bignumber.equal(new BN(1000));
           expect(event.args.newUniv2).to.be.bignumber.equal(new BN(10));
         });
       });
@@ -883,8 +883,8 @@ describe('Pool', function () {
         const totalPhantom = phantomAfterNewBonded.add(new BN(1000).mul(INITIAL_STAKE_MULTIPLE).addn(1000));
 
         beforeEach(async function () {
-          await this.sBTC.mint(userAddress, 3000);
-          await this.sBTC.approve(this.pool.address, 3000, {from: userAddress});
+          await this.WBTC.mint(userAddress, 3000);
+          await this.WBTC.approve(this.pool.address, 3000, {from: userAddress});
 
           await this.univ2.faucet(userAddress1, 1000);
           await this.univ2.approve(this.pool.address, 1000, {from: userAddress1});
@@ -894,7 +894,7 @@ describe('Pool', function () {
           await incrementEpoch(this.dao);
           await this.bitcoin.mint(this.pool.address, 1000);
 
-          // 1000 ESB + 3000 Synth sBTC
+          // 1000 ESB + 3000 Synth WBTC
           await this.univ2.set(1000, 3000, 10);
 
           this.result = await this.pool.provide(1000, {from: userAddress});
@@ -929,7 +929,7 @@ describe('Pool', function () {
           });
 
           expect(event.args.value).to.be.bignumber.equal(new BN(1000));
-          expect(event.args.lessSBTC).to.be.bignumber.equal(new BN(3000));
+          expect(event.args.lessWBTC).to.be.bignumber.equal(new BN(3000));
           expect(event.args.newUniv2).to.be.bignumber.equal(new BN(10));
         });
       });

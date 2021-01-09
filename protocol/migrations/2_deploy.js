@@ -4,10 +4,10 @@ const Deployer3 = artifacts.require('Deployer3')
 const Implementation = artifacts.require('Implementation')
 const Root = artifacts.require('Root')
 
-const TestnetSBTC = artifacts.require('TestnetSBTC')
+const TestnetWBTC = artifacts.require('TestnetWBTC')
 
-async function deployTestnetSBTC(deployer) {
-  await deployer.deploy(TestnetSBTC)
+async function deployTestnetWBTC(deployer) {
+  await deployer.deploy(TestnetWBTC)
 }
 
 
@@ -37,8 +37,8 @@ module.exports = function (deployer) {
       case 'ropsten':
       case 'mainnet':
       case 'mainnet-fork':
-        await deployTestnet(deployer)
-        // await deployTestnetSBTC(deployer)
+        // await deployTestnet(deployer)
+        await deployTestnetWBTC(deployer)
         break
       default:
         throw 'Unsupported network'

@@ -35,7 +35,7 @@ contract Oracle is IOracle {
 
     function setup() public onlyDao {
         _pair = IUniswapV2Pair(
-            IUniswapV2Factory(UNISWAP_FACTORY).createPair(_bitcoin, sBTC())
+            IUniswapV2Factory(UNISWAP_FACTORY).createPair(_bitcoin, WBTC())
         );
 
         (address token0, address token1) = (_pair.token0(), _pair.token1());
@@ -124,8 +124,8 @@ contract Oracle is IOracle {
         return lastReserve;
     }
 
-    function sBTC() internal view returns (address) {
-        return Constants.getSBTCAddress();
+    function WBTC() internal view returns (address) {
+        return Constants.getWBTCAddress();
     }
 
     function pair() external view returns (address) {

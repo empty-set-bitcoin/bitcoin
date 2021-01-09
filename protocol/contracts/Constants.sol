@@ -9,12 +9,12 @@ library Constants {
 
     /* Bootstrapping */
     uint256 private constant BOOTSTRAPPING_PERIOD = 168; // 14 days
-    uint256 private constant BOOTSTRAPPING_PRICE = 11e17; // ESB price == 1.10 * sBTC
+    uint256 private constant BOOTSTRAPPING_PRICE = 11e17; // ESB price == 1.10 * WBTC
 
     /* Oracle */
-    address private constant sBTC =
+    address private constant WBTC =
         address(0x60b3BFebD319767a1DB45DFA3cE37124CED61568); // for ropsten
-    // address(0xfE18be6b3Bd88A2D2A7f928d00292E7a9963CfC6);
+    // address(0x2260fac5e5542a773aa44fbcfedf7c193bc2c599); // Wrapped BTC
     uint256 private constant ORACLE_RESERVE_MINIMUM = 1e18;
 
     /* Bonding */
@@ -42,10 +42,12 @@ library Constants {
 
     /* DAO */
     uint256 private constant ADVANCE_INCENTIVE = 1e15; // 0.001 ESB // not making this too crazy
-    uint256 private constant DAO_EXIT_LOCKUP_EPOCHS = 20; // 5 days
+    // uint256 private constant DAO_EXIT_LOCKUP_EPOCHS = 20; // 5 days
+    uint256 private constant DAO_EXIT_LOCKUP_EPOCHS = 60; // 5 days
 
     /* Pool */
-    uint256 private constant POOL_EXIT_LOCKUP_EPOCHS = 8; // 2 days
+    // uint256 private constant POOL_EXIT_LOCKUP_EPOCHS = 8; // 2 days
+    uint256 private constant POOL_EXIT_LOCKUP_EPOCHS = 24; // 2 days
 
     /* Market */
     uint256 private constant COUPON_EXPIRATION = 360; // 30 days
@@ -61,8 +63,8 @@ library Constants {
     address private constant TREASURY_ADDRESS =
         address(0x0000000000000000000000000000000000000000);
 
-    function getSBTCAddress() internal pure returns (address) {
-        return sBTC;
+    function getWBTCAddress() internal pure returns (address) {
+        return WBTC;
     }
 
     function getOracleReserveMinimum() internal pure returns (uint256) {
