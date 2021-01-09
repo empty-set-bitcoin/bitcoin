@@ -8,7 +8,6 @@ library Constants {
     uint256 private constant CHAIN_ID = 1; // Mainnet
 
     /* Bootstrapping */
-    // uint256 private constant BOOTSTRAPPING_PERIOD = 56; // 14 days
     uint256 private constant BOOTSTRAPPING_PERIOD = 168; // 14 days
     uint256 private constant BOOTSTRAPPING_PRICE = 11e17; // ESB price == 1.10 * sBTC
 
@@ -31,22 +30,17 @@ library Constants {
     // uint256 private constant EPOCH_START = 1610323200; // 1/10/2021, 7:00:00 PM Standard Time)
     uint256 private constant EPOCH_START = 1609027200;
     uint256 private constant EPOCH_OFFSET = 0;
-    // uint256 private constant EPOCH_PERIOD = 21600; // 6 hours
     uint256 private constant EPOCH_PERIOD = 7200; // 2 hours
 
     /* Governance */
-    // uint256 private constant GOVERNANCE_PERIOD = 9; // 9 epochs
     uint256 private constant GOVERNANCE_PERIOD = 27; // 9 * 3 epochs since epoch period is reduced
-    // uint256 private constant GOVERNANCE_EXPIRATION = 2; // 2 + 1 epochs
     uint256 private constant GOVERNANCE_EXPIRATION = 7; // 2 * 3 + 1 epochs
     uint256 private constant GOVERNANCE_QUORUM = 20e16; // 20%
     uint256 private constant GOVERNANCE_PROPOSAL_THRESHOLD = 5e15; // 0.5%
     uint256 private constant GOVERNANCE_SUPER_MAJORITY = 66e16; // 66%
-    // uint256 private constant GOVERNANCE_EMERGENCY_DELAY = 6; // 6 epochs
     uint256 private constant GOVERNANCE_EMERGENCY_DELAY = 18; // 18 epochs (36 hours; same as ESG)
 
     /* DAO */
-    // uint256 private constant ADVANCE_INCENTIVE = 1e17; // 0.1 ESB
     uint256 private constant ADVANCE_INCENTIVE = 1e15; // 0.001 ESB // not making this too crazy
     uint256 private constant DAO_EXIT_LOCKUP_EPOCHS = 20; // 5 days
 
@@ -54,16 +48,12 @@ library Constants {
     uint256 private constant POOL_EXIT_LOCKUP_EPOCHS = 8; // 2 days
 
     /* Market */
-    // uint256 private constant COUPON_EXPIRATION = 120; // 30 days
     uint256 private constant COUPON_EXPIRATION = 360; // 30 days
-    // uint256 private constant DEBT_RATIO_CAP = 35e16; // 35%
     uint256 private constant DEBT_RATIO_CAP = 25e16; // 25%; inspired by DSD DIP-8
 
     /* Regulator */
     uint256 private constant SUPPLY_CHANGE_LIMIT = 5e16; // 5%
-    // uint256 private constant SUPPLY_CHANGE_LIMIT = 1e17; // 10%
     uint256 private constant COUPON_SUPPLY_CHANGE_LIMIT = 3e16; // 3% since we are expanding less too
-    // uint256 private constant COUPON_SUPPLY_CHANGE_LIMIT = 6e16; // 6%
     uint256 private constant ORACLE_POOL_RATIO = 20; // 20%
     uint256 private constant TREASURY_RATIO = 250; // 2.5%, until TREASURY_ADDRESS is set, this portion is sent to LP
 
@@ -192,3 +182,17 @@ library Constants {
         return TREASURY_ADDRESS;
     }
 }
+
+/* Constants for previous implementations are listed below: 
+
+// uint256 private constant BOOTSTRAPPING_PERIOD = 56; // 14 days
+// uint256 private constant SUPPLY_CHANGE_LIMIT = 1e17; // 10%
+// uint256 private constant COUPON_SUPPLY_CHANGE_LIMIT = 6e16; // 6%
+// uint256 private constant COUPON_EXPIRATION = 120; // 30 days
+// uint256 private constant DEBT_RATIO_CAP = 35e16; // 35%
+// uint256 private constant ADVANCE_INCENTIVE = 1e17; // 0.1 ESB
+// uint256 private constant GOVERNANCE_PERIOD = 9; // 9 epochs
+// uint256 private constant GOVERNANCE_EXPIRATION = 2; // 2 + 1 epochs
+// uint256 private constant GOVERNANCE_EMERGENCY_DELAY = 6; // 6 epochs
+// uint256 private constant EPOCH_PERIOD = 21600; // 6 hours
+*/
