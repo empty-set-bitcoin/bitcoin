@@ -23,6 +23,7 @@ const PrivateKeyProvider = require('truffle-privatekey-provider');
 const privateKey = process.env.ESB_PRIVATE_KEY;
 const infuraId = process.env.ESB_INFURA_ID;
 const etherscanKey = process.env.ESB_ETHERSCAN_KEY;
+const alchemyId = process.env.ESB_ALCHEMY_ID;
 
 module.exports = {
   /**
@@ -62,11 +63,10 @@ module.exports = {
     // Useful for deploying to a public network.
     // NB: It's important to wrap the provider as a function.
     ropsten: {
-      provider: () => new PrivateKeyProvider(privateKey, 'https://ropsten.infura.io/v3/' + infuraId),
+      provider: () => new PrivateKeyProvider(privateKey, 'https://eth-ropsten.alchemyapi.io/v2/' + alchemyId),
       network_id: 3,       // Ropsten's id
       gas: 5500000,        // Ropsten has a lower block limit than mainnet
-      confirmations: 2,    // # of confs to wait between deployments. (default: 0)
-      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+      // timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
       skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     },
 

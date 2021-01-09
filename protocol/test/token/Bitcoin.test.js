@@ -24,7 +24,7 @@ const permit = [
 
 async function signPermit(bitcoin, privateKey, message) {
   const domainData = {
-    name: "Empty Set Bitcoin",
+    name: "Dynamic Set Bitcoin",
     version: "1",
     chainId: "1",
     verifyingContract: bitcoin,

@@ -17,11 +17,11 @@ contract Getters is State {
      */
 
     function name() public view returns (string memory) {
-        return "Empty Set Bitcoin Stake";
+        return "Dynamic Set Bitcoin Stake";
     }
 
     function symbol() public view returns (string memory) {
-        return "ESBS";
+        return "DSBS";
     }
 
     function decimals() public view returns (uint8) {

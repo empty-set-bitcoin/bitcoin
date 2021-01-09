@@ -1,12 +1,12 @@
 # Bitcoin
 
-Fully decentralized self-stabilizing bitcoin, guided by a DAO.
+Fully decentralized self-stabilizing bitcoin, guided by a DAO. This application is running on the Ropsten Network.
 
 ## The Token
 
 - shorthand name: `bitcoin`
-- full name: `Empty Set Bitcoin`
-- symbol: `ESB`
+- full name: `Dynamic Set Bitcoin`
+- symbol: `DSB`
 - decimals: `18`
 
 ## contracts
@@ -16,7 +16,7 @@ Fully decentralized self-stabilizing bitcoin, guided by a DAO.
 - `` **DAO**
 - `` **Bitcoin**
 - `` **Oracle**
-- `` **UniswapV2 sBTC:ESB Pair**
+- `` **UniswapV2 sBTC:DSB Pair**
 - `` **LP Incentivation Pool**
 
 ## audit

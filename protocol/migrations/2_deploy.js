@@ -4,6 +4,12 @@ const Deployer3 = artifacts.require('Deployer3')
 const Implementation = artifacts.require('Implementation')
 const Root = artifacts.require('Root')
 
+const TestnetSBTC = artifacts.require('TestnetSBTC')
+
+async function deployTestnetSBTC(deployer) {
+  await deployer.deploy(TestnetSBTC)
+}
+
 
 async function deployTestnet(deployer) {
   const d1 = await deployer.deploy(Deployer1)
@@ -32,6 +38,7 @@ module.exports = function (deployer) {
       case 'mainnet':
       case 'mainnet-fork':
         await deployTestnet(deployer)
+        // await deployTestnetSBTC(deployer)
         break
       default:
         throw 'Unsupported network'
