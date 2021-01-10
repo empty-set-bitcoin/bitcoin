@@ -1,6 +1,6 @@
 # Bitcoin
 
-Fully decentralized self-stabilizing bitcoin, guided by a DAO. This application is running on the Ropsten Network.
+Fully decentralized self-stabilizing bitcoin, guided by a DAO. This application is running on the main Ethereum blockchain.
 
 ## The Token
 
