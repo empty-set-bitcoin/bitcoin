@@ -13,11 +13,11 @@ Fully decentralized self-stabilizing bitcoin, guided by a DAO. This application 
 
 ### mainnet
 
-- `` **DAO**
-- `` **Bitcoin**
-- `` **Oracle**
-- `` **UniswapV2 WBTC:ESB Pair**
-- `` **LP Incentivation Pool**
+- `0x5Daa79222c2Be77Ae76F9FcddC64dB0A5E6AeD82` **DAO**
+- `0xC929e85DAB215705b0473c846196Afc94DFe2455` **Bitcoin**
+- `0xCcEd0Cb07EB0953179248186D46aBa5578353931` **Oracle**
+- `0x10a0A9EF463bDE88A22137aD1e32240ea9CD559D` **UniswapV2 WBTC:ESB Pair**
+- `0x41d31061413b2f4613ab213961ee04d95b26e8c4` **LP Incentivation Pool**
 
 ## audit
 

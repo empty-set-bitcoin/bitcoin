@@ -13,8 +13,7 @@ library Constants {
 
     /* Oracle */
     address private constant WBTC =
-        address(0x60b3BFebD319767a1DB45DFA3cE37124CED61568); // for ropsten
-    // address(0x2260fac5e5542a773aa44fbcfedf7c193bc2c599); // Wrapped BTC
+        address(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599); // Wrapped BTC
     uint256 private constant ORACLE_RESERVE_MINIMUM = 1e18;
 
     /* Bonding */
@@ -27,8 +26,7 @@ library Constants {
         uint256 period;
     }
 
-    // uint256 private constant EPOCH_START = 1610323200; // 1/10/2021, 7:00:00 PM Standard Time)
-    uint256 private constant EPOCH_START = 1609027200;
+    uint256 private constant EPOCH_START = 1610240400; // 01/10/2021 @ 1:00am (UTC)
     uint256 private constant EPOCH_OFFSET = 0;
     uint256 private constant EPOCH_PERIOD = 7200; // 2 hours
 

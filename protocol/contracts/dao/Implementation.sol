@@ -16,7 +16,7 @@ contract Implementation is State, Bonding, Market, Regulator, Govern {
 
     function initialize() public initializer {
         // Dev rewards
-        incentivize(msg.sender, 5e17); // 0.5 ESB
+        incentivize(msg.sender, 5e16); // 0.05 ESB
     }
 
     function advance() external {
